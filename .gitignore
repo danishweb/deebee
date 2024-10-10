@@ -1,1 +1,4 @@
 /venv
+/deebee/core/__pycache__
+/deebee/__pycache__
+/scripts/__pycache__
