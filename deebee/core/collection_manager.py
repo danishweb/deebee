@@ -1,9 +1,10 @@
 import os
 import json
 from datetime import datetime
+from deebee.config.settings import base_path
 
 class CollectionManager:
-    def __init__(self, base_path: str='collections'):
+    def __init__(self, base_path: str=base_path):
         self.base_path = base_path
         os.makedirs(self.base_path, exist_ok=True)
 

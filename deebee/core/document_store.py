@@ -1,9 +1,10 @@
 import json
 import os
 import uuid
+from deebee.config.settings import base_path
 
 class DocumentStore:
-    def __init__(self, collection_name: str, base_path="collections"):
+    def __init__(self, collection_name: str, base_path: str=base_path):
         self.collection_name = collection_name
         self.collection_path = os.path.join(base_path, f"{collection_name}.json")
         self.load_documents()
@@ -25,6 +26,8 @@ class DocumentStore:
 
     def insert(self, document):
         """Insert a new document."""
+        if not isinstance(document, dict):
+            raise ValueError("Document must be a dictionary.")
         document['_id'] = str(uuid.uuid4())
         self.documents.append(document)
         self.save_documents()
