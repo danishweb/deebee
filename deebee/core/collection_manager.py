@@ -11,6 +11,7 @@ class CollectionManager:
 
     def create_collection(self, name: str):
         '''Create a new collection'''
+        os.makedirs(self.base_path, exist_ok=True)
         collection_path = os.path.join(self.base_path, f"{name}.json")
         if os.path.exists(collection_path):
             raise FileExistsError(f"Collection {name} already exists")

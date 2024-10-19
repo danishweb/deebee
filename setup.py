@@ -9,6 +9,6 @@ setup(
             'deebee = deebee.__main__:main', 
         ],
     },
-    install_requires=[],
+    install_requires=['Flask'],
 )
 

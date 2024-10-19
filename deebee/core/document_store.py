@@ -11,12 +11,20 @@ class DocumentStore:
 
     def load_documents(self):
         """Load documents from the collection."""
-        if os.path.exists(self.collection_path):
-            with open(self.collection_path, 'r') as f:
-                # Load the documents and ensure it's a list
-                data = json.load(f)
-                self.documents = data if isinstance(data, list) else []
-        else:
+        try:
+            if os.path.exists(self.collection_path):
+                with open(self.collection_path, 'r') as f:
+                    data = json.load(f)           
+                    self.documents = data if isinstance(data, list) else []
+            else:
+                self.documents = []
+        except json.JSONDecodeError:
+            # Handle case where the JSON file is corrupted or empty
+            print(f"Warning: The file {self.collection_path} is not valid JSON.")
+            self.documents = []
+        except Exception as e:
+            # Catch any other exceptions for debugging purposes
+            print(f"Error loading documents: {e}")
             self.documents = []
 
     def save_documents(self):
