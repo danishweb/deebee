@@ -1,2 +1,2 @@
-base_path = "collections"
+base_collection_folder = "collections"
 

@@ -2,25 +2,45 @@ from flask import Flask, request, jsonify
 from deebee.core.collection_manager import CollectionManager
 from deebee.core.document_store import DocumentStore
 from deebee.core.query_engine import QueryEngine
+from deebee.core.schema_manager import SchemaManager
 
 app = Flask(__name__)
 
-# Initialize the Collection Manager
+# Initialize managers
 collection_manager = CollectionManager()
+schema_manager = SchemaManager()
 
 @app.route('/collections', methods=['POST'])
 def create_collection():
     data = request.json
     collection_name = data.get('name')
+    schema = data.get('schema')
+
     if not collection_name:
         return jsonify({"error": "Collection name is required."}), 400
+
+    # Create the collection
     collection_manager.create_collection(collection_name)
-    return jsonify({"message": f"Collection '{collection_name}' created."}), 201
+
+    # Define the schema for the collection (optional)
+    if schema:
+        schema_manager.define_schema(collection_name, schema)
+
+    return jsonify({"message": f"Collection '{collection_name}' created.", "schema": schema}), 201
 
 @app.route('/collections/<collection_name>/documents', methods=['POST'])
 def insert_document(collection_name):
     document_store = DocumentStore(collection_name)
     document = request.json
+    print(schema_manager.schemas.get(collection_name) is not None)
+    if schema_manager.schemas.get(collection_name) is not None:
+    # Validate the document against the schema
+        try:
+            schema_manager.validate(collection_name, document)
+        except ValueError as e:
+            return jsonify({"error": str(e)}),
+
+    # Insert the validated document
     document_store.insert(document)
     return jsonify({"message": "Document inserted.", "document": document}), 201
 
@@ -28,10 +48,9 @@ def insert_document(collection_name):
 def query_documents(collection_name):
     document_store = DocumentStore(collection_name)
 
-    # Ensure documents are properly loaded
     documents = document_store.documents  # Load documents explicitly
     
-    if documents is None:
+    if not documents:
         return jsonify({"error": "Collection not found or empty."}), 404
 
     # Convert query parameters into expected types (e.g., age as integer)

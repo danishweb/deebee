@@ -5,3 +5,5 @@
 /deebee.egg-info
 /collections
 /deebee/config/__pycache__
+/build
+/dist
