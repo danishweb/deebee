@@ -23,8 +23,8 @@ Deebee is a JSON Document Management System built using Flask, providing a RESTf
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/danishweb/deebee.git
+   cd deebee
    ```
 2. Install the required packages:
    ```bash
