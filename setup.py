@@ -10,7 +10,6 @@ setup(
         ],
     },
     install_requires=[
-        'Flask>=2.0.0', 
         'argparse',
     ],
     extras_require={
